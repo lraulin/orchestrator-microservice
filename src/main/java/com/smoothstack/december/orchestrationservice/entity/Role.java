@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 @Entity
 @Table
 public class Role {
@@ -22,13 +20,12 @@ public class Role {
     private Long id;
 
     @Column
-    private String roleName;
+    private String name;
 
     @Column
     private String description;
 
     @ManyToMany(mappedBy = "roles")
-    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
     public Long getId() {
@@ -39,12 +36,12 @@ public class Role {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return this.roleName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -53,14 +50,6 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<User> getUsers() {
-        return this.users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
 }
