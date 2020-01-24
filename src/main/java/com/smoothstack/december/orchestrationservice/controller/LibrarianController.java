@@ -1,7 +1,5 @@
 package com.smoothstack.december.orchestrationservice.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,24 +23,14 @@ public class LibrarianController {
 
     private static final String baseUrl = "http://localhost:8081/lms/librarian";
 
-    @PutMapping("/book-copies")
-    public void updateBookCopy(@RequestBody @Valid BookCopy bookCopy) {
-        this.restTemplate.put(baseUrl + "/bookCopies", bookCopy);
-    }
-
-    @PostMapping("/bookCopies")
-    public BookCopy createBookCopy(@RequestBody @Valid BookCopy bookCopy) {
-        return this.restTemplate.postForObject(baseUrl + "/bookCopies", bookCopy, BookCopy.class);
+    @PostMapping("/book-copies")
+    public BookCopy createBookCopy(@RequestBody BookCopy bookCopy) {
+        return this.restTemplate.postForObject(baseUrl + "/book-copies", bookCopy, BookCopy.class);
     }
 
     @PostMapping("/books")
-    public Book createBook(@RequestBody @Valid Book book) {
-        return this.restTemplate.postForObject(baseUrl + "/bookCopies", book, Book.class);
-    }
-
-    @PutMapping("/branches")
-    public void updateLibraryBranch(@RequestBody @Valid LibraryBranch branch) {
-        this.restTemplate.put(baseUrl + "/branches", branch);
+    public Book createBook(@RequestBody Book book) {
+        return this.restTemplate.postForObject(baseUrl + "/books", book, Book.class);
     }
 
     @GetMapping("/books")
@@ -55,9 +43,19 @@ public class LibrarianController {
         return this.restTemplate.getForObject(baseUrl + "/branches", LibraryBranch[].class);
     }
 
-    @GetMapping("/bookCopies/{branchId}")
+    @GetMapping("/book-copies/branches/{branchId}")
     public BookCopy[] getBookCopies(@PathVariable Long branchId) {
-        return this.restTemplate.getForObject(baseUrl + "/bookCopies/" + branchId, BookCopy[].class);
+        return this.restTemplate.getForObject(baseUrl + "/book-copies/" + branchId, BookCopy[].class);
+    }
+
+    @PutMapping("/book-copies/books/{bookId}/branches/{branchId}")
+    public void updateBookCopy(@PathVariable Long bookId, @PathVariable Long branchId, @RequestBody BookCopy bookCopy) {
+        this.restTemplate.put(baseUrl + "/book-copies/books/" + bookId + "/branches/" + branchId, bookCopy);
+    }
+
+    @PutMapping("/branches/{branchId}")
+    public void updateLibraryBranch(@PathVariable Long branchId, @RequestBody LibraryBranch branch) {
+        this.restTemplate.put(baseUrl + "/branches/" + branchId, branch);
     }
 
 }

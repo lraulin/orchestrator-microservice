@@ -13,7 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table
@@ -32,7 +31,6 @@ public class User {
 
     @ManyToMany
     @JoinTable
-    @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 
     public Long getId() {
