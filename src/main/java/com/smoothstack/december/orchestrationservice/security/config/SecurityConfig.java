@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,9 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_URI = "/lms/admin/**";
     private static final String LIBRARIAN_URI = "/lms/librarian/**";
     private static final String BORROWER_URI = "/lms/borrower/**";
-    private static final String ROLE_ADMIN = "ADMIN";
-    private static final String ROLE_LIBRARIAN = "LIBRARIAN";
-    private static final String BORROWER_ROLE = "BORROWER";
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -58,8 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.authorizeRequests().antMatchers(AUTHENTICATE_URI).permitAll().antMatchers(BORROWER_URI)
-                .hasRole(BORROWER_ROLE).antMatchers(LIBRARIAN_URI).hasRole(ROLE_LIBRARIAN).antMatchers(ADMIN_URI)
-                .hasRole(ROLE_ADMIN);
+                .hasRole(RoleConstants.BORROWER_ROLE).antMatchers(LIBRARIAN_URI).hasRole(RoleConstants.LIBRARIAN_ROLE)
+                .antMatchers(ADMIN_URI).hasRole(RoleConstants.ADMIN_ROLE);
 
         httpSecurity.exceptionHandling().accessDeniedPage("/login");
         httpSecurity.addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

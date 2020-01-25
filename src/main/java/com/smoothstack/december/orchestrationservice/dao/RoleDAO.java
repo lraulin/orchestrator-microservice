@@ -7,5 +7,5 @@ import com.smoothstack.december.orchestrationservice.entity.Role;
 
 @Repository
 public interface RoleDAO extends JpaRepository<Role, Long> {
-
+    public Role findByName(String name);
 }
