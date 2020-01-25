@@ -13,7 +13,6 @@ import com.smoothstack.december.orchestrationservice.service.RoleService;
 
 @RestController
 @RequestMapping("/lms/roles")
-
 public class RoleController {
 
     @Autowired

@@ -28,13 +28,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    private static final String authenticateUri = "/lms/authenticate";
-    private static final String adminUri = "/lms/admin/**";
-    private static final String librarianUri = "/lms/librarian/**";
-    private static final String borrowerUri = "/lms/borrower/**";
-    private static final String adminRole = "ADMIN";
-    private static final String librarianRole = "LIBRARIAN";
-    private static final String borrowerRole = "BORROWER";
+    private static final String AUTHENTICATE_URI = "/lms/authenticate";
+    private static final String ADMIN_URI = "/lms/admin/**";
+    private static final String LIBRARIAN_URI = "/lms/librarian/**";
+    private static final String BORROWER_URI = "/lms/borrower/**";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_LIBRARIAN = "LIBRARIAN";
+    private static final String BORROWER_ROLE = "BORROWER";
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -57,12 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//        httpSecurity.authorizeRequests().antMatchers(authenticateUri).permitAll().antMatchers(adminUri)
-//                .hasRole(adminRole).antMatchers(librarianUri).hasRole(librarianRole).antMatchers(borrowerUri)
-//                .hasRole(borrowerRole);
-
-        httpSecurity.authorizeRequests().antMatchers(authenticateUri).permitAll().antMatchers(librarianUri)
-                .hasRole(librarianRole).anyRequest().authenticated();
+        httpSecurity.authorizeRequests().antMatchers(AUTHENTICATE_URI).permitAll().antMatchers(BORROWER_URI)
+                .hasRole(BORROWER_ROLE).antMatchers(LIBRARIAN_URI).hasRole(ROLE_LIBRARIAN).antMatchers(ADMIN_URI)
+                .hasRole(ROLE_ADMIN);
 
         httpSecurity.exceptionHandling().accessDeniedPage("/login");
         httpSecurity.addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

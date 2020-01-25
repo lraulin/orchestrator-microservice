@@ -13,13 +13,13 @@ import com.smoothstack.december.orchestrationservice.service.UserService;
 
 @RestController
 @RequestMapping("lms/users")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getUsers() {
         return this.userService.findAllUsers();
     }
