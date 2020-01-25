@@ -24,13 +24,13 @@ public class LibrarianController {
     private static final String baseUrl = "http://localhost:8081/lms/librarian";
 
     @PostMapping("/book-copies")
-    public BookCopy createBookCopy(@RequestBody BookCopy bookCopy) {
-        return this.restTemplate.postForObject(baseUrl + "/book-copies", bookCopy, BookCopy.class);
+    public void createBookCopy(@RequestBody BookCopy bookCopy) {
+        this.restTemplate.postForObject(baseUrl + "/book-copies", bookCopy, BookCopy.class);
     }
 
     @PostMapping("/books")
-    public Book createBook(@RequestBody Book book) {
-        return this.restTemplate.postForObject(baseUrl + "/books", book, Book.class);
+    public void createBook(@RequestBody Book book) {
+        this.restTemplate.postForObject(baseUrl + "/books", book, Book.class);
     }
 
     @GetMapping("/books")
@@ -45,7 +45,7 @@ public class LibrarianController {
 
     @GetMapping("/book-copies/branches/{branchId}")
     public BookCopy[] getBookCopies(@PathVariable Long branchId) {
-        return this.restTemplate.getForObject(baseUrl + "/book-copies/" + branchId, BookCopy[].class);
+        return this.restTemplate.getForObject(baseUrl + "/book-copies/branches/" + branchId, BookCopy[].class);
     }
 
     @PutMapping("/book-copies/books/{bookId}/branches/{branchId}")

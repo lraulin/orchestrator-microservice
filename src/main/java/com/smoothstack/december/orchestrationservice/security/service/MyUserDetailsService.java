@@ -1,4 +1,4 @@
-package com.smoothstack.december.orchestrationservice.service;
+package com.smoothstack.december.orchestrationservice.security.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.smoothstack.december.orchestrationservice.dao.UserDAO;
+import com.smoothstack.december.orchestrationservice.entity.Role;
 import com.smoothstack.december.orchestrationservice.entity.User;
 
 @Component
-public class AppUserDetailsService implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserDAO userDAO;
@@ -29,13 +30,13 @@ public class AppUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
+
+        for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+        }
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), authorities);
-
         return userDetails;
     }
 }
