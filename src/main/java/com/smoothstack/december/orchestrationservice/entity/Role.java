@@ -3,6 +3,7 @@ package com.smoothstack.december.orchestrationservice.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,14 +20,22 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Column
     private String description;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     private Set<User> users = new HashSet<>();
+
+    public Role() {
+    }
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public Long getId() {
         return this.id;

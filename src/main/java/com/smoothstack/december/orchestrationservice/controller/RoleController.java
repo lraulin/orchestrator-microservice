@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smoothstack.december.orchestrationservice.entity.Role;
+import com.smoothstack.december.orchestrationservice.security.config.RoleConstants;
 import com.smoothstack.december.orchestrationservice.service.RoleService;
 
 @RestController
@@ -19,7 +20,7 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN_USER')")
+    @PreAuthorize("hasAuthority('" + RoleConstants.PREFIXED_ADMIN_ROLE + "')")
     public List<Role> getRoles() {
         return this.roleService.findAllRoles();
     }
