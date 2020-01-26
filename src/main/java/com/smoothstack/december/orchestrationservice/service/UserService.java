@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.smoothstack.december.orchestrationservice.dao.RoleDAO;
@@ -26,14 +26,14 @@ public class UserService {
     private RoleDAO roleDAO;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public void createAdmin(User user) {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = new HashSet<>(
-                Arrays.asList(new Role(RoleConstants.BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION),
-                        new Role(RoleConstants.LIBRARIAN_ROLE, RoleConstants.LIBRARIAN_DESCRIPTION),
-                        new Role(RoleConstants.ADMIN_ROLE, RoleConstants.ADMIN_DESCRIPTION)));
+                Arrays.asList(new Role(RoleConstants.PREFIXED_BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION),
+                        new Role(RoleConstants.PREFIXED_LIBRARIAN_ROLE, RoleConstants.LIBRARIAN_DESCRIPTION),
+                        new Role(RoleConstants.PREFIXED_ADMIN_ROLE, RoleConstants.ADMIN_DESCRIPTION)));
         this.findIdsForRoles(roles);
         user.setRoles(roles);
         this.userDAO.save(user);
@@ -42,16 +42,17 @@ public class UserService {
     public void createLibrarian(User user) {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = new HashSet<>(
-                Arrays.asList(new Role(RoleConstants.BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION),
-                        new Role(RoleConstants.LIBRARIAN_ROLE, RoleConstants.LIBRARIAN_DESCRIPTION)));
+                Arrays.asList(new Role(RoleConstants.PREFIXED_BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION),
+                        new Role(RoleConstants.PREFIXED_LIBRARIAN_ROLE, RoleConstants.LIBRARIAN_DESCRIPTION)));
         this.findIdsForRoles(roles);
         user.setRoles(roles);
         this.userDAO.save(user);
     }
 
     public void createBorrower(User user) {
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         Set<Role> roles = new HashSet<>(
-                Arrays.asList(new Role(RoleConstants.BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION)));
+                Arrays.asList(new Role(RoleConstants.PREFIXED_BORROWER_ROLE, RoleConstants.BORROWER_DESCRIPTION)));
         this.findIdsForRoles(roles);
         user.setRoles(roles);
         this.userDAO.save(user);

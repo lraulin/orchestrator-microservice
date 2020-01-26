@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @PostMapping("/register/librarian")
-    @PreAuthorize("hasAnyAuthority(['" + RoleConstants.PREFIXED_ADMIN_ROLE + "', '"
-            + RoleConstants.PREFIXED_LIBRARIAN_ROLE + "'])")
+    @PreAuthorize("hasAnyAuthority('" + RoleConstants.PREFIXED_ADMIN_ROLE + "', '"
+            + RoleConstants.PREFIXED_LIBRARIAN_ROLE + "')")
     public void createLibrarian(@RequestBody @Valid User user) {
         this.userService.createLibrarian(user);
     }
