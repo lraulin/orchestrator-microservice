@@ -2,9 +2,14 @@ package com.smoothstack.december.orchestrationservice.controller;
 
 import java.util.Arrays;
 
+import javax.validation.constraints.Min;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,6 +82,14 @@ public class LibrarianController {
     public void updateLibraryBranch(@PathVariable Long branchId, @RequestBody LibraryBranch branch) {
         logger.debug("request: branchId={}, body=", branchId, branch.toString());
         this.restTemplate.put(baseUrl + "/branches/" + branchId, branch);
+    }
+
+    @DeleteMapping("/book-copies/books/{bookId}/branches/{branchId}")
+    public ResponseEntity<BookCopy> deleteBookCopy(@PathVariable @Min(1) Long bookId,
+            @PathVariable @Min(1) Long branchId) {
+        logger.debug("request: bookId=[], branchId={}", bookId, branchId);
+        this.restTemplate.delete(baseUrl + "/book-copies/books/" + bookId + "/branches/" + branchId);
+        return new ResponseEntity<BookCopy>(HttpStatus.NO_CONTENT);
     }
 
 }
