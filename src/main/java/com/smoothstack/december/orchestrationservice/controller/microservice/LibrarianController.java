@@ -1,4 +1,4 @@
-package com.smoothstack.december.orchestrationservice.controller;
+package com.smoothstack.december.orchestrationservice.controller.microservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

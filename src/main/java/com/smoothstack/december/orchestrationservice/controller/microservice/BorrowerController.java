@@ -1,4 +1,4 @@
-package com.smoothstack.december.orchestrationservice.controller;
+package com.smoothstack.december.orchestrationservice.controller.microservice;
 
 import com.smoothstack.december.orchestrationservice.entity.Book;
 import com.smoothstack.december.orchestrationservice.entity.BookLoan;
