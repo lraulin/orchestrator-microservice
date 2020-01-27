@@ -1,9 +1,7 @@
 package com.smoothstack.december.orchestrationservice.controller.microservice;
 
-import com.smoothstack.december.orchestrationservice.entity.Book;
-import com.smoothstack.december.orchestrationservice.entity.BookLoan;
-import com.smoothstack.december.orchestrationservice.entity.LibraryBranch;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.smoothstack.december.orchestrationservice.entity.Book;
+import com.smoothstack.december.orchestrationservice.entity.BookLoan;
+import com.smoothstack.december.orchestrationservice.entity.LibraryBranch;
 
 @RestController
 @RequestMapping("v1/lms/borrower")
@@ -26,6 +28,7 @@ public class BorrowerController {
     private static final String libraryBranchesUrl = "/branches";
     private static final String availableBooksNotCheckedOutUrl = "/borrowers/{borrowerId}/branches/{branchId}/available-books/";
     private static final String bookLoansUrl = "/branches/{branchId}/borrowers/{borrowerId}";
+    private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
     private static String fullUrl(String s) {
         return baseUrl + s;
@@ -34,36 +37,44 @@ public class BorrowerController {
     @PostMapping(checkOutUrl)
     void checkOutBook(@PathVariable("bookId") long bookId, @PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
+        logger.debug("request: bookId={}, borrowerId={}, branchId={}", bookId, borrowerId, branchId);
         BookLoan.BookLoanId id = new BookLoan.BookLoanId(bookId, borrowerId, branchId);
-        restTemplate.postForObject(fullUrl(checkOutUrl), id, BookLoan.BookLoanId.class);
+        this.restTemplate.postForObject(fullUrl(checkOutUrl), id, BookLoan.BookLoanId.class);
     }
 
     @PostMapping(checkInUrl)
     void checkInBook(@PathVariable("bookId") long bookId, @PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
+        logger.debug("request: bookId={}, borrowerId={}, branchId={}", bookId, borrowerId, branchId);
         BookLoan.BookLoanId id = new BookLoan.BookLoanId(bookId, borrowerId, branchId);
-        restTemplate.postForObject(fullUrl(checkInUrl), id, BookLoan.BookLoanId.class);
+        this.restTemplate.postForObject(fullUrl(checkInUrl), id, BookLoan.BookLoanId.class);
     }
 
     @GetMapping(libraryBranchesUrl)
     public LibraryBranch[] getLibraryBranches() {
-        ResponseEntity<LibraryBranch[]> responseEntity = restTemplate.getForEntity(fullUrl(libraryBranchesUrl),
+        ResponseEntity<LibraryBranch[]> responseEntity = this.restTemplate.getForEntity(fullUrl(libraryBranchesUrl),
                 LibraryBranch[].class);
+        logger.debug("response: {}", responseEntity);
         return responseEntity.getBody();
     }
 
     @GetMapping(availableBooksNotCheckedOutUrl)
     public Book[] getAvailableBooksNotCheckedOut(@PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
-        ResponseEntity<Book[]> responseEntity = restTemplate.getForEntity(fullUrl(availableBooksNotCheckedOutUrl), Book[].class);
+        logger.debug("request: branchId: {}, borrowerId={}", branchId, borrowerId);
+        ResponseEntity<Book[]> responseEntity = this.restTemplate.getForEntity(fullUrl(availableBooksNotCheckedOutUrl),
+                Book[].class);
+        logger.debug("response: {}", responseEntity);
         return responseEntity.getBody();
     }
 
     @GetMapping(bookLoansUrl)
     public BookLoan[] getBookLoans(@PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
-        ResponseEntity<BookLoan[]> responseEntity = restTemplate.getForEntity(fullUrl(bookLoansUrl),
+        logger.debug("request: branchId: {}, borrowerId={}", branchId, borrowerId);
+        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl(bookLoansUrl),
                 BookLoan[].class);
+        logger.debug("response: {}", responseEntity);
         return responseEntity.getBody();
     }
 }

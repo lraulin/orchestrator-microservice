@@ -3,10 +3,31 @@ package com.smoothstack.december.orchestrationservice.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table
 public class Genre {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Min(1)
     private Long id;
+
+    @Column
+    @Size(min = 2, max = 50)
     private String name;
+
+    @ManyToMany(mappedBy = "genres", cascade = CascadeType.ALL)
     private Set<Book> books = new HashSet<>();
 
     public Long getId() {
@@ -25,12 +46,9 @@ public class Genre {
         this.name = name;
     }
 
-    public Set<Book> getBooks() {
-        return this.books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
+    @Override
+    public String toString() {
+        return "Genre [id=" + this.id + ", name=" + this.name + "]";
     }
 
 }

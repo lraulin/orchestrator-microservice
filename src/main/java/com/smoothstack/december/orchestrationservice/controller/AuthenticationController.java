@@ -1,5 +1,7 @@
 package com.smoothstack.december.orchestrationservice.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,8 +30,12 @@ public class AuthenticationController {
     @Autowired
     private MyUserDetailsService userDetailsService;
 
+    private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
+
     @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
+        logger.debug("request: {}", user.toString());
+
         try {
             this.authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -39,6 +45,7 @@ public class AuthenticationController {
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getUsername());
         String jwt = this.jwtTokenUtil.generateToken(userDetails);
+        logger.debug("response jwt token: {}", jwt);
         return ResponseEntity.ok(jwt);
     }
 
