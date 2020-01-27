@@ -69,4 +69,10 @@ public class User {
         this.roles.add(role);
     }
 
+    @Override
+    public String toString() {
+        return "User [id=" + this.id + ", username=" + this.username + ", password=" + this.password + ", roles="
+                + this.roles + "]";
+    }
+
 }
