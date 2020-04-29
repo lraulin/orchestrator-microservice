@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import com.smoothstack.lms.orchestratorservice.entity.BookCopy;
 import com.smoothstack.lms.orchestratorservice.entity.LibraryBranch;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/lms/librarian")
 public class LibrarianController {
 
@@ -34,60 +36,73 @@ public class LibrarianController {
     private static final Logger logger = LogManager.getLogger(LibrarianController.class);
 
     @PostMapping("/book-copies")
-    public BookCopy createBookCopy(@RequestBody BookCopy bookCopy) {
+    public ResponseEntity<BookCopy> createBookCopy(@RequestBody BookCopy bookCopy) {
         logger.debug("request: {}", bookCopy.toString());
         BookCopy response = this.restTemplate.postForObject(baseUrl + "/book-copies", bookCopy, BookCopy.class);
         logger.debug("response: {}", bookCopy);
-        return response;
+        return new ResponseEntity<BookCopy>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/books")
-    public Book createBook(@RequestBody Book book) {
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
         logger.debug("request: {}", book.toString());
         Book response = this.restTemplate.postForObject(baseUrl + "/books", book, Book.class);
         logger.debug("response: {}", response.toString());
-        return response;
+        return new ResponseEntity<Book>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/books")
-    public Book[] getBooks() {
-        Book[] books = this.restTemplate.getForObject(baseUrl + "/books", Book[].class);
-        logger.debug("response: {}", Arrays.deepToString(books));
-        return books;
+    @GetMapping("/books/book-copies/branches/{branchId}")
+    public ResponseEntity<Book[]> getBooksNotInBookCopies(@PathVariable Long branchId) {
+        Book[] response = this.restTemplate.getForObject(baseUrl + "/books/book-copies/branches/" + branchId,
+                Book[].class);
+        logger.debug("response: {}", Arrays.deepToString(response));
+        return new ResponseEntity<Book[]>(response, HttpStatus.OK);
     }
 
     @GetMapping("/branches")
-    public LibraryBranch[] getLibraryBranches() {
+    public ResponseEntity<LibraryBranch[]> getLibraryBranches() {
         LibraryBranch[] branches = this.restTemplate.getForObject(baseUrl + "/branches", LibraryBranch[].class);
         logger.debug("response: {}", Arrays.deepToString(branches));
-        return branches;
+        return new ResponseEntity<LibraryBranch[]>(branches, HttpStatus.OK);
+    }
+
+    @GetMapping("/branches/{branchId}")
+    public ResponseEntity<LibraryBranch> getLibraryBranchById(@PathVariable Long branchId) {
+        logger.debug("request: branchId={}", branchId);
+        LibraryBranch response = this.restTemplate.getForObject(baseUrl + "/branches/" + branchId, LibraryBranch.class);
+        logger.debug("response: {}", response.toString());
+        return new ResponseEntity<LibraryBranch>(response, HttpStatus.OK);
     }
 
     @GetMapping("/book-copies/branches/{branchId}")
-    public BookCopy[] getBookCopies(@PathVariable Long branchId) {
+    public ResponseEntity<BookCopy[]> getBookCopies(@PathVariable Long branchId) {
         logger.debug("request: branchId={}", branchId);
-        BookCopy[] bookCopies = this.restTemplate.getForObject(baseUrl + "/book-copies/branches/" + branchId,
+        BookCopy[] response = this.restTemplate.getForObject(baseUrl + "/book-copies/branches/" + branchId,
                 BookCopy[].class);
-        logger.debug("response: {}", Arrays.deepToString(bookCopies));
-        return bookCopies;
+        logger.debug("response: {}", Arrays.deepToString(response));
+        return new ResponseEntity<BookCopy[]>(response, HttpStatus.OK);
     }
 
     @PutMapping("/book-copies/books/{bookId}/branches/{branchId}")
-    public void updateBookCopy(@PathVariable Long bookId, @PathVariable Long branchId, @RequestBody BookCopy bookCopy) {
+    public ResponseEntity<BookCopy> updateBookCopy(@PathVariable Long bookId, @PathVariable Long branchId,
+            @RequestBody BookCopy bookCopy) {
         logger.debug("request: bookId={}, branchId={},  body: {}", bookId, branchId, bookCopy.toString());
         this.restTemplate.put(baseUrl + "/book-copies/books/" + bookId + "/branches/" + branchId, bookCopy);
+        return new ResponseEntity<BookCopy>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/branches/{branchId}")
-    public void updateLibraryBranch(@PathVariable Long branchId, @RequestBody LibraryBranch branch) {
+    public ResponseEntity<LibraryBranch> updateLibraryBranch(@PathVariable Long branchId,
+            @RequestBody LibraryBranch branch) {
         logger.debug("request: branchId={}, body=", branchId, branch.toString());
         this.restTemplate.put(baseUrl + "/branches/" + branchId, branch);
+        return new ResponseEntity<LibraryBranch>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/book-copies/books/{bookId}/branches/{branchId}")
     public ResponseEntity<BookCopy> deleteBookCopy(@PathVariable @Min(1) Long bookId,
             @PathVariable @Min(1) Long branchId) {
-        logger.debug("request: bookId=[], branchId={}", bookId, branchId);
+        logger.debug("request: bookId={}, branchId={}", bookId, branchId);
         this.restTemplate.delete(baseUrl + "/book-copies/books/" + bookId + "/branches/" + branchId);
         return new ResponseEntity<BookCopy>(HttpStatus.NO_CONTENT);
     }
