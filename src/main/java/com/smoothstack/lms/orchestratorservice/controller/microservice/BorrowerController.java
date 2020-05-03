@@ -17,6 +17,8 @@ import com.smoothstack.lms.orchestratorservice.entity.BookLoan;
 import com.smoothstack.lms.orchestratorservice.entity.BookLoan.BookLoanId;
 import com.smoothstack.lms.orchestratorservice.entity.LibraryBranch;
 
+
+
 @RestController
 @RequestMapping("/lms/borrower")
 public class BorrowerController {
@@ -37,11 +39,10 @@ public class BorrowerController {
     }
 
     @PostMapping(checkOutUrl)
-    void checkOutBook(@PathVariable("bookId") long bookId, @PathVariable("branchId") long branchId,
-            @PathVariable("borrowerId") long borrowerId) {
+    void checkOutBook(@PathVariable("bookId") long bookId, @PathVariable("borrowerId") long borrowerId, @PathVariable("branchId") long branchId) {
         logger.debug("request: bookId={}, borrowerId={}, branchId={}", bookId, borrowerId, branchId);
         BookLoanId id = new BookLoanId(bookId, borrowerId, branchId);
-        this.restTemplate.postForObject(fullUrl(checkOutUrl), id, BookLoanId.class);
+        this.restTemplate.postForObject(fullUrl("/borrowers/book/checkout"), id, BookLoanId.class);
     }
 
     @PostMapping(checkInUrl)
@@ -49,7 +50,7 @@ public class BorrowerController {
             @PathVariable("borrowerId") long borrowerId) {
         logger.debug("request: bookId={}, borrowerId={}, branchId={}", bookId, borrowerId, branchId);
         BookLoan.BookLoanId id = new BookLoan.BookLoanId(bookId, borrowerId, branchId);
-        this.restTemplate.postForObject(fullUrl(checkInUrl), id, BookLoan.BookLoanId.class);
+        this.restTemplate.postForObject(fullUrl("/borrowers/book/checkin"), id, BookLoan.BookLoanId.class);
     }
 
     @GetMapping(libraryBranchesUrl)
@@ -61,20 +62,28 @@ public class BorrowerController {
     }
 
     @GetMapping(availableBooksNotCheckedOutUrl)
-    public Book[] getAvailableBooksNotCheckedOut(@PathVariable("branchId") long branchId,
+    public Book[] getAvailableBooksNotCheckedOut(
+            @PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
+
+        String url = String.format("/borrowers/%s/branches/%s/available-books/", borrowerId, branchId);
+
         logger.debug("request: branchId: {}, borrowerId={}", branchId, borrowerId);
-        ResponseEntity<Book[]> responseEntity = this.restTemplate.getForEntity(fullUrl(availableBooksNotCheckedOutUrl),
+        ResponseEntity<Book[]> responseEntity = this.restTemplate.getForEntity(fullUrl(url),
                 Book[].class);
         logger.debug("response: {}", responseEntity);
         return responseEntity.getBody();
     }
 
     @GetMapping(bookLoansUrl)
-    public BookLoan[] getBookLoans(@PathVariable("branchId") long branchId,
+    public BookLoan[] getBookLoans(
+            @PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
+
+        String url = String.format("/branches/%s/borrowers/%s", branchId, borrowerId);
+
         logger.debug("request: branchId: {}, borrowerId={}", branchId, borrowerId);
-        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl(bookLoansUrl),
+        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl(url),
                 BookLoan[].class);
         logger.debug("response: {}", responseEntity);
         return responseEntity.getBody();
