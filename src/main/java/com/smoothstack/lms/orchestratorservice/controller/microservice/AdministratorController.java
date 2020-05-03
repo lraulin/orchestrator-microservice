@@ -74,26 +74,26 @@ public class AdministratorController {
         this.restTemplate.put(fullUrl("/book/") + id, book);
     }
 
-    @DeleteMapping("/bookLoan/{id}")
+    @DeleteMapping("/book-loans/{id}")
     public void deleteBookLoan(@PathVariable long id) {
-        this.restTemplate.getForEntity(fullUrl("/bookLoan/") + id, BookLoan[].class);
+        this.restTemplate.getForEntity(fullUrl("/book-loans/") + id, BookLoan[].class);
     }
 
-    @GetMapping("/bookLoans")
+    @GetMapping("/book-loans")
     public BookLoan[] getBookLoans() {
-        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/bookLoans"),
+        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/book-loans"),
                 BookLoan[].class);
         return responseEntity.getBody();
     }
 
-    @PostMapping("/bookLoans")
+    @PostMapping("/book-loans")
     public void createBookLoan(@RequestBody BookLoan bookLoan) {
-        this.restTemplate.postForObject(fullUrl("/bookLoans"), bookLoan, BookLoan.class);
+        this.restTemplate.postForObject(fullUrl("/book-loans"), bookLoan, BookLoan.class);
     }
 
-    @PutMapping("/bookLoan/{id}")
-    public void updateBookLoan(@PathVariable long id, @RequestBody BookLoan bookLoan) {
-        this.restTemplate.put(fullUrl("/bookLoan/") + id, bookLoan);
+    @PutMapping("/book-loan")
+    public void updateBookLoan(@RequestBody BookLoan bookLoan) {
+        this.restTemplate.put(fullUrl("/book-loan"), bookLoan);
     }
 
     @DeleteMapping("/borrower/{id}")
