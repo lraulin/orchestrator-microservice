@@ -1,25 +1,13 @@
 package com.smoothstack.lms.orchestratorservice.controller.microservice;
 
+import com.smoothstack.lms.orchestratorservice.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import com.smoothstack.lms.orchestratorservice.entity.Author;
-import com.smoothstack.lms.orchestratorservice.entity.Book;
-import com.smoothstack.lms.orchestratorservice.entity.BookLoan;
-import com.smoothstack.lms.orchestratorservice.entity.Borrower;
-import com.smoothstack.lms.orchestratorservice.entity.Genre;
-import com.smoothstack.lms.orchestratorservice.entity.LibraryBranch;
-
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/lms/admin")
 public class AdministratorController {
 
@@ -141,24 +129,46 @@ public class AdministratorController {
 
     @DeleteMapping("/branch/{id}")
     public void deleteLibraryBranch(@PathVariable long id) {
-        this.restTemplate.getForEntity(fullUrl("/libraryBranch/") + id, LibraryBranch[].class);
+        this.restTemplate.getForEntity(fullUrl("/branch/") + id, LibraryBranch[].class);
     }
 
     @GetMapping("/branches")
     public LibraryBranch[] getLibraryBranches() {
-        ResponseEntity<LibraryBranch[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/libraryBranches"),
+        ResponseEntity<LibraryBranch[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/branches"),
                 LibraryBranch[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/branches")
     public void createLibraryBranch(@RequestBody LibraryBranch libraryBranch) {
-        this.restTemplate.postForObject(fullUrl("/libraryBranches"), libraryBranch, LibraryBranch.class);
+        this.restTemplate.postForObject(fullUrl("/branches"), libraryBranch, LibraryBranch.class);
     }
 
     @PutMapping("/branch/{id}")
     public void updateLibraryBranch(@PathVariable long id, @RequestBody LibraryBranch libraryBranch) {
-        this.restTemplate.put(fullUrl("/libraryBranch/") + id, libraryBranch);
+        this.restTemplate.put(fullUrl("/branch/") + id, libraryBranch);
+    }
+
+    @DeleteMapping("/publisher/{id}")
+    public void deletePublisher(@PathVariable long id) {
+        this.restTemplate.getForEntity(fullUrl("/publisher/") + id, Publisher[].class);
+    }
+
+    @GetMapping("/publishers")
+    public Publisher[] getPublishers() {
+        ResponseEntity<Publisher[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/publishers"),
+                Publisher[].class);
+        return responseEntity.getBody();
+    }
+
+    @PostMapping("/publishers")
+    public void createPublisher(@RequestBody Publisher publisher) {
+        this.restTemplate.postForObject(fullUrl("/publishers"), publisher, Publisher.class);
+    }
+
+    @PutMapping("/publisher/{id}")
+    public void updatePublisher(@PathVariable long id, @RequestBody Publisher publisher) {
+        this.restTemplate.put(fullUrl("/publisher/") + id, publisher);
     }
 
 }
