@@ -62,9 +62,9 @@ public class AdministratorController {
         this.restTemplate.put(fullUrl("/book/") + id, book);
     }
 
-    @DeleteMapping("/book-loan/{id}")
+    @DeleteMapping("/book-loans/{id}")
     public void deleteBookLoan(@PathVariable long id) {
-        this.restTemplate.getForEntity(fullUrl("/book-loan/") + id, BookLoan[].class);
+        this.restTemplate.getForEntity(fullUrl("/book-loans/") + id, BookLoan[].class);
     }
 
     @GetMapping("/book-loans")
@@ -79,9 +79,9 @@ public class AdministratorController {
         this.restTemplate.postForObject(fullUrl("/book-loans"), bookLoan, BookLoan.class);
     }
 
-    @PutMapping("/book-loan/{id}")
-    public void updateBookLoan(@PathVariable long id, @RequestBody BookLoan bookLoan) {
-        this.restTemplate.put(fullUrl("/book-loan/") + id, bookLoan);
+    @PutMapping("/book-loan")
+    public void updateBookLoan(@RequestBody BookLoan bookLoan) {
+        this.restTemplate.put(fullUrl("/book-loan"), bookLoan);
     }
 
     @DeleteMapping("/borrower/{id}")
