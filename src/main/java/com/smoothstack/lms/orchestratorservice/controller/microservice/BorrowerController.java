@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
 
 import com.smoothstack.lms.orchestratorservice.controller.AuthenticationController;
@@ -19,7 +20,9 @@ import com.smoothstack.lms.orchestratorservice.entity.LibraryBranch;
 
 
 
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/lms/borrower")
 public class BorrowerController {
 
@@ -31,7 +34,7 @@ public class BorrowerController {
     private static final String checkInUrl = "/borrowers/{borrowerId}/branches/{branchId}/books/{bookId}:checkin";
     private static final String libraryBranchesUrl = "/branches";
     private static final String availableBooksNotCheckedOutUrl = "/borrowers/{borrowerId}/branches/{branchId}/available-books/";
-    private static final String bookLoansUrl = "/branches/{branchId}/borrowers/{borrowerId}";
+    private static final String bookLoansUrl = "/borrowers/{borrowerId}/loans";
     private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
     private static String fullUrl(String s) {
@@ -77,12 +80,11 @@ public class BorrowerController {
 
     @GetMapping(bookLoansUrl)
     public BookLoan[] getBookLoans(
-            @PathVariable("branchId") long branchId,
             @PathVariable("borrowerId") long borrowerId) {
 
-        String url = String.format("/branches/%s/borrowers/%s", branchId, borrowerId);
+        String url = String.format("/borrowers/%s/loans", borrowerId);
 
-        logger.debug("request: branchId: {}, borrowerId={}", branchId, borrowerId);
+        logger.debug("request: borrowerId={}", borrowerId);
         ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl(url),
                 BookLoan[].class);
         logger.debug("response: {}", responseEntity);
