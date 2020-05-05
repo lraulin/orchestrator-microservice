@@ -25,7 +25,7 @@ public class AdministratorController {
         this.restTemplate.delete(fullUrl("/author/") + id);
     }
 
-    @GetMapping("/authors")
+    @GetMapping("/author")
     public Author[] getAuthors() {
         ResponseEntity<Author[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/authors"), Author[].class);
         return responseEntity.getBody();
