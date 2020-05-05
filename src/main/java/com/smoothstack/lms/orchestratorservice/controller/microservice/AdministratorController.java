@@ -27,13 +27,13 @@ public class AdministratorController {
 
     @GetMapping("/author")
     public Author[] getAuthors() {
-        ResponseEntity<Author[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/authors"), Author[].class);
+        ResponseEntity<Author[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/author"), Author[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/author")
     public void createAuthor(@RequestBody Author author) {
-        this.restTemplate.postForObject(fullUrl("/authors"), author, Author.class);
+        this.restTemplate.postForObject(fullUrl("/author"), author, Author.class);
     }
 
     @PutMapping("/author/{id}")
@@ -48,13 +48,13 @@ public class AdministratorController {
 
     @GetMapping("/book")
     public Book[] getBooks() {
-        ResponseEntity<Book[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/books"), Book[].class);
+        ResponseEntity<Book[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/book"), Book[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/book")
     public void createBook(@RequestBody Book book) {
-        this.restTemplate.postForObject(fullUrl("/books"), book, Book.class);
+        this.restTemplate.postForObject(fullUrl("/book"), book, Book.class);
     }
 
     @PutMapping("/book/{id}")
@@ -64,19 +64,19 @@ public class AdministratorController {
 
     @DeleteMapping("/loan/{id}")
     public void deleteBookLoan(@PathVariable long id) {
-        this.restTemplate.delete(fullUrl("/loans/") + id);
+        this.restTemplate.delete(fullUrl("/loan/") + id);
     }
 
     @GetMapping("/loan")
     public BookLoan[] getBookLoans() {
-        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/loans"),
+        ResponseEntity<BookLoan[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/loan"),
                 BookLoan[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/loan")
     public void createBookLoan(@RequestBody BookLoan bookLoan) {
-        this.restTemplate.postForObject(fullUrl("/loans"), bookLoan, BookLoan.class);
+        this.restTemplate.postForObject(fullUrl("/loan"), bookLoan, BookLoan.class);
     }
 
     @PutMapping("/loan")
@@ -91,14 +91,14 @@ public class AdministratorController {
 
     @GetMapping("/borrower")
     public Borrower[] getBorrowers() {
-        ResponseEntity<Borrower[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/borrowers"),
+        ResponseEntity<Borrower[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/borrower"),
                 Borrower[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/borrower")
     public void createBorrower(@RequestBody Borrower borrower) {
-        this.restTemplate.postForObject(fullUrl("/borrowers"), borrower, Borrower.class);
+        this.restTemplate.postForObject(fullUrl("/borrower"), borrower, Borrower.class);
     }
 
     @PutMapping("/borrower/{id}")
@@ -113,13 +113,13 @@ public class AdministratorController {
 
     @GetMapping("/genre")
     public Genre[] getGenres() {
-        ResponseEntity<Genre[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/genres"), Genre[].class);
+        ResponseEntity<Genre[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/genre"), Genre[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/genre")
     public void createGenre(@RequestBody Genre genre) {
-        this.restTemplate.postForObject(fullUrl("/genres"), genre, Genre.class);
+        this.restTemplate.postForObject(fullUrl("/genre"), genre, Genre.class);
     }
 
     @PutMapping("/genre/{id}")
@@ -134,14 +134,14 @@ public class AdministratorController {
 
     @GetMapping("/branch")
     public LibraryBranch[] getLibraryBranches() {
-        ResponseEntity<LibraryBranch[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/branches"),
+        ResponseEntity<LibraryBranch[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/branch"),
                 LibraryBranch[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/branch")
     public void createLibraryBranch(@RequestBody LibraryBranch libraryBranch) {
-        this.restTemplate.postForObject(fullUrl("/branches"), libraryBranch, LibraryBranch.class);
+        this.restTemplate.postForObject(fullUrl("/branch"), libraryBranch, LibraryBranch.class);
     }
 
     @PutMapping("/branch/{id}")
@@ -156,14 +156,14 @@ public class AdministratorController {
 
     @GetMapping("/publisher")
     public Publisher[] getPublishers() {
-        ResponseEntity<Publisher[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/publishers"),
+        ResponseEntity<Publisher[]> responseEntity = this.restTemplate.getForEntity(fullUrl("/publisher"),
                 Publisher[].class);
         return responseEntity.getBody();
     }
 
     @PostMapping("/publisher")
     public void createPublisher(@RequestBody Publisher publisher) {
-        this.restTemplate.postForObject(fullUrl("/publishers"), publisher, Publisher.class);
+        this.restTemplate.postForObject(fullUrl("/publisher"), publisher, Publisher.class);
     }
 
     @PutMapping("/publisher/{id}")
