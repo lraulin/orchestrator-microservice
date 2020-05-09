@@ -43,14 +43,6 @@ public class LibrarianController {
         return new ResponseEntity<BookCopy>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/books")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        logger.debug("request: {}", book.toString());
-        Book response = this.restTemplate.postForObject(baseUrl + "/books", book, Book.class);
-        logger.debug("response: {}", response.toString());
-        return new ResponseEntity<Book>(response, HttpStatus.CREATED);
-    }
-
     @GetMapping("/books/book-copies/branches/{branchId}")
     public ResponseEntity<Book[]> getBooksNotInBookCopies(@PathVariable Long branchId) {
         Book[] response = this.restTemplate.getForObject(baseUrl + "/books/book-copies/branches/" + branchId,
