@@ -22,7 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = this.userDAO.findByUsername(s);
+        User user = this.userDAO.findByEmail(s);
 
         if (user == null) {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", s));
@@ -32,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(),
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(), authorities);
         return userDetails;
     }

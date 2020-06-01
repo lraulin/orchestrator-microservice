@@ -27,24 +27,15 @@ public class UserController {
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
     @PostMapping("/register/admin")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void createAdmin(@RequestBody @Valid User user) {
         logger.debug("request: {}", user.toString());
         this.userService.createAdmin(user);
     }
 
     @PostMapping("/register/librarian")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     public void createLibrarian(@RequestBody @Valid User user) {
         logger.debug("request: {}", user);
         this.userService.createLibrarian(user);
-    }
-
-    @PostMapping("/register/borrower")
-    @PreAuthorize("permitAll()")
-    public void createBorrower(@RequestBody @Valid User user) {
-        logger.debug("request: {}", user);
-        this.userService.createBorrower(user);
     }
 
     @GetMapping

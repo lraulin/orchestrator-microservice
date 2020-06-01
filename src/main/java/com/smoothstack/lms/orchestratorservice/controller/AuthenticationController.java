@@ -38,12 +38,12 @@ public class AuthenticationController {
 
         try {
             this.authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Incorrect username or password", e);
         }
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getUsername());
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
         String jwt = this.jwtTokenUtil.generateToken(userDetails);
         logger.debug("response jwt token: {}", jwt);
         return ResponseEntity.ok(jwt);

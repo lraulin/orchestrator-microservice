@@ -30,12 +30,6 @@ public class UserService {
         this.userDAO.save(user);
     }
 
-    public void createBorrower(User user) {
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        user.setRole(User.Role.ROLE_BORROWER);
-        this.userDAO.save(user);
-    }
-
     public List<User> findAllUsers() {
         return this.userDAO.findAll();
     }

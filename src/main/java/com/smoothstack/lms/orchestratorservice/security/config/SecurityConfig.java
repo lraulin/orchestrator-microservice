@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.smoothstack.lms.orchestratorservice.security.filter.JwtRequestFilter;
 
@@ -27,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String AUTHENTICATE_URI = "/lms/authenticate";
     private static final String ADMIN_URI = "/lms/admin/**";
     private static final String LIBRARIAN_URI = "/lms/librarian/**";
-    private static final String BORROWER_URI = "/lms/borrower/**";
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,18 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        httpSecurity.authorizeRequests().antMatchers("/**").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(AUTHENTICATE_URI).permitAll().antMatchers(LIBRARIAN_URI)
+                .hasRole("LIBRARIAN").antMatchers(ADMIN_URI).hasRole("ADMIN");
 
-        /*
-         * httpSecurity.authorizeRequests().antMatchers(AUTHENTICATE_URI).permitAll().
-         * antMatchers(BORROWER_URI)
-         * .hasRole("BORROWER").antMatchers(LIBRARIAN_URI).hasRole("LIBRARIAN").
-         * antMatchers(ADMIN_URI) .hasRole("ADMIN");
-         */
-
-        // httpSecurity.exceptionHandling().accessDeniedPage("/login");
-        // httpSecurity.addFilterBefore(this.jwtRequestFilter,
-        // UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.exceptionHandling().accessDeniedPage("/login");
+        httpSecurity.addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }
