@@ -58,6 +58,7 @@ public class AuthenticationController {
         response.put("token", jwt);
         response.put("firstName", user.getFirstName());
         response.put("lastName", user.getLastName());
+        response.put("role", user.getRole().toString());
         logger.debug("response: {}", response.toString());
         return ResponseEntity.ok(response);
     }
