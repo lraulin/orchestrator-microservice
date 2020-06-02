@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getUsers() {
-        List<User> users = this.userService.findAllUsers();
+        List<User> users = this.userService.getAllUsers();
         logger.debug("response: {}", users.toString());
         return users;
     }

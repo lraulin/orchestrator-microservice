@@ -21,11 +21,11 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserDAO userDAO;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = this.userDAO.findByEmail(s);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = this.userDAO.findByEmail(email);
 
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("The username %s doesn't exist", s));
+            throw new UsernameNotFoundException(String.format("The username %s doesn't exist", email));
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -34,6 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(), authorities);
+
         return userDetails;
     }
 }

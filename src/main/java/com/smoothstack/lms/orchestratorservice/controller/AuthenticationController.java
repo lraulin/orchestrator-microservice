@@ -1,5 +1,8 @@
 package com.smoothstack.lms.orchestratorservice.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.smoothstack.lms.orchestratorservice.entity.User;
 import com.smoothstack.lms.orchestratorservice.security.service.MyUserDetailsService;
 import com.smoothstack.lms.orchestratorservice.security.util.JwtUtil;
+import com.smoothstack.lms.orchestratorservice.service.UserService;
 
 @RestController
 @RequestMapping("/lms/authenticate")
@@ -29,6 +33,9 @@ public class AuthenticationController {
 
     @Autowired
     private MyUserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
 
@@ -45,8 +52,14 @@ public class AuthenticationController {
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
         String jwt = this.jwtTokenUtil.generateToken(userDetails);
-        logger.debug("response jwt token: {}", jwt);
-        return ResponseEntity.ok(jwt);
+        Map<String, String> response = new HashMap<>();
+
+        user = this.userService.getUser(user.getEmail());
+        response.put("token", jwt);
+        response.put("firstName", user.getFirstName());
+        response.put("lastName", user.getLastName());
+        logger.debug("response: {}", response.toString());
+        return ResponseEntity.ok(response);
     }
 
 }

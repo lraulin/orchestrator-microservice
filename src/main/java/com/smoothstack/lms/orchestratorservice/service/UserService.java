@@ -30,8 +30,12 @@ public class UserService {
         this.userDAO.save(user);
     }
 
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         return this.userDAO.findAll();
+    }
+
+    public User getUser(String email) {
+        return this.userDAO.findByEmail(email);
     }
 
 }
